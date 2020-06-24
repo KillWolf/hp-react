@@ -1,0 +1,15 @@
+.Recommendations {
+    display: flex;
+    flex-flow: column;
+    text-align: left;
+    padding: 2rem;
+    width: 80%;
+    margin: 0 auto;
+    background-color: #F5F5F5;
+}
+
+.Blockquote {
+    padding: 20px 30px;
+    margin: 20px 0;
+    border-left: 5px solid #EEEEEE;
+}

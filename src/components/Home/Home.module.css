@@ -1,0 +1,32 @@
+.CardsContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.CardsContainer div {
+	width: 350px;
+}
+
+.Body {
+	display: flex;
+	  justify-content: center;
+	  flex-direction: column;
+  }
+  
+  .TaglineContainer {
+	display: flex;
+	  justify-content: center;
+	  margin: 2rem 0 1rem 0;
+  }
+  
+  
+  .TagLine {
+	width:75%;
+  }
+  
+  .TagLineTitle {
+	font-weight: 100;
+	  text-align: center;
+  
+  }

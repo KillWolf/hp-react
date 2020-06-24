@@ -1,0 +1,50 @@
+.Additions {
+    margin: 0 auto;
+    width: 80%;
+    margin-top: 200px;
+    background-color: #F5F5F5;
+    border: 1px solid #E0E0E0;
+}
+
+.Header {
+    font-weight: 200;
+    align-self: flex-start;
+    top: -51px;
+    display: flex;
+    position: relative;
+}
+
+.MenuList {
+    display: flex;
+}
+
+
+.MenuList div:first-child {
+    margin-right: 0.2rem;
+    left: -1px;
+}
+
+.Selected {
+    background-color: #F5F5F5;
+    padding: 1rem;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-left: 1px solid #E0E0E0;
+    border-top: 1px solid #E0E0E0;
+    border-right: 1px solid #E0E0E0;
+}
+
+
+.Unselected {
+    background-color: #BDBDBD;
+    cursor: pointer;
+    z-index: -1;
+    padding: 1rem;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.Unselected:hover {
+    background-color: #E0E0E0;
+}
+

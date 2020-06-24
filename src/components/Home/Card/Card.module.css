@@ -1,0 +1,15 @@
+.SingleCard {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	margin: 2rem 3rem;
+}
+
+.SingleCard h3 {
+	font-size: 1.5rem;
+	font-weight: 100;
+}
+
+.SingleCard img {
+	padding: 0 0 1rem 0;
+}
