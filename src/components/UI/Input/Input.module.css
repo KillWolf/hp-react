@@ -1,0 +1,26 @@
+
+
+.InputElement:focus {
+    outline: none;
+    background-color: #ccc;
+}
+
+.Invalid {
+    border: 1px solid red;
+    background-color: #FDA49A;
+}
+
+.FormInputs {
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    padding: 0.5rem;
+    width: 100%;
+    outline: none;
+
+}
+
+.TextArea {
+    outline: none;
+    resize: none;
+    border: 1px solid #E0E0E0;
+}

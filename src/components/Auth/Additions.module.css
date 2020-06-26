@@ -6,6 +6,11 @@
     border: 1px solid #E0E0E0;
 }
 
+.ComponentContainer {
+    margin: 0 auto;
+    width: 70%;
+}
+
 .Header {
     font-weight: 200;
     align-self: flex-start;

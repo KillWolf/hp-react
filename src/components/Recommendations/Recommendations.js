@@ -15,6 +15,7 @@ const Credentials = (props) => {
     useEffect(() => {
         axios.get('/recommendations.json')
             .then(response => {
+                console.log(response);
                 const entries = Object.entries(response.data);
                 const recommendationArray = entries.map(entry => {
                     return {id: entry[0], ...entry[1]}
@@ -24,7 +25,7 @@ const Credentials = (props) => {
             .catch(error => {
 
             })
-    })
+    }, [])
 
     return (
         <div>

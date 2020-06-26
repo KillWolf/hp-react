@@ -1,10 +1,53 @@
 import React, { useState } from 'react';
 import classes from './AddRecommendations.module.css';
+import { extractData, checkValidity } from '../../../utility/Helpers/Helpers';
 import axios from '../../../axios-instances/axios-firebase'
+import Input from '../../UI/Input/Input'
 
 const AddRecommendation = (props) => {
 
-    const resetForm = () => { return { title: null, content: null, author: null } }
+    const initialState = {
+        title: {
+            elementType: 'input',
+            elementConfig: {
+                type: 'text',
+                label: 'TITEL'
+            },
+            value: '',
+            validation: {
+                required: true,
+            },
+            valid: false,
+            touched: false
+        },
+        author: {
+            elementType: 'input',
+            elementConfig: {
+                type: 'text',
+                label: 'SKREVET AF'
+            },
+            value: '',
+            validation: {
+                required: true,
+            },
+            valid: false,
+            touched: false
+        },
+        content: {
+            elementType: 'textarea',
+            elementConfig: {
+                type: 'text',
+                label: 'CITAT'
+            },
+            value: '',
+            validation: {
+                required: true,
+            },
+            valid: false,
+            touched: false
+        },
+        formIsValid: false
+    }
 
     //TODO
     //1. AUTHENTICATION
@@ -12,54 +55,80 @@ const AddRecommendation = (props) => {
     //3. MAKE IT POSSIBLE TO POPULATE IF EDITING
     //4. VERIFICATION THAT A THING HAS BEEN POSTED
     // 5. PUT FORM INPUTS INTO DIFFERENT COMPONENTS
-    const [form, setForm] = useState(resetForm());
+    // 6. ADD REDUX?
+    //7. FFIND SIMILARITIES
+    const [config, setConfig] = useState(initialState)
+
+    const onValueChangeHandler = (event, key) => {
+        const updatedConfig = { ...config };
+        const updatedConfigElement = { ...config[key] }
+        updatedConfigElement.value = event.target.value;
+        updatedConfigElement.valid = checkValidity(updatedConfigElement.value, updatedConfigElement.validation);
+        updatedConfigElement.touched = true;
+        updatedConfig[key] = updatedConfigElement;
+
+        let formIsValid = true;
+        for (let key in updatedConfig) {
+            if (key !== 'formIsValid') {
+                console.log(updatedConfig[key].valid)
+                updatedConfig.formIsValid = updatedConfig[key].valid && formIsValid;
+            }
+        }
+
+        console.log(updatedConfig);
+
+        setConfig(updatedConfig)
+    }
+
+    const formsElementArray = [];
+    for (let key in config) {
+        if (key !== 'formIsValid') {
+            formsElementArray.push({
+                id: key,
+                ...config[key]
+            });
+        }
+    }
+
+
+    const formInput = formsElementArray.map(formElement => {
+        return (
+            <div key={formElement.id} className={classes.InputContainer}>
+                <label className={classes.FormLabels} for={formElement.id}>{formElement.elementConfig.label}</label>
+                <Input
+                    elementType={formElement.elementType}
+                    elementConfig={formElement.elementConfig}
+                    changed={(event) => onValueChangeHandler(event, formElement.id)}
+                    value={formElement.value}
+                    valid={formElement.valid}
+                    shouldValidate={formElement.validation}
+                    touched={formElement.touched}
+                />
+            </div>
+        )
+    })
 
     const recommedendationHandler = (event) => {
         event.preventDefault();
-        axios.post('/recommendations.json', form)
+        axios.post('/recommendations.json', extractData(config))
             .then(response => {
-                console.log(response);
-                setForm(resetForm())
+                setConfig(initialState)
             })
             .catch(error => {
                 console.log(error);
             });
     }
 
-    const onChangeHandler = (event) => {
-        const newForm = {
-            ...form,
-            [event.target.name]: event.target.value
-        }
-        setForm(newForm);
-    }
-
     return (
-        <div className={classes.AddRecommendation} >
-            <form className={classes.Form} onSubmit={recommedendationHandler}>
-                <div className={classes.InputContainer}>
-                    <label className={classes.FormLabels} for="title">TITEL</label>
-                    <input className={classes.FormInputs} type="text" name="title" onChange={(event) => onChangeHandler(event)} />
-                </div>
-                <div className={classes.InputContainer}>
-                    <label className={classes.FormLabels} for="author">SKREVET AF</label>
-                    <input className={classes.FormInputs} type="text" name="author" onChange={(event) => onChangeHandler(event)} />
-                </div>
-                <div className={classes.InputContainer}>
-                    <label className={classes.FormLabels} for="content">CITAT</label>
-                    <textarea className={classes.FormInputs, classes.TextArea}
-                        cols="50"
-                        rows="15"
-                        placeholder="Skriv citat"
-                        type="text"
-                        name="content"
-                        onChange={(event) => onChangeHandler(event)} />
-                </div>
-                <input className={classes.FormInputs, classes.Button} type="submit" value="INDSEND" />
-            </form>
-        </div>
+        <form className={classes.Form} onSubmit={recommedendationHandler}>
+            {formInput}
+            <button
+                className={classes.FormInputs, classes.Button}
+                disabled={!config.formIsValid} type="submit" value="">
+                INDSEND
+            </button>
+        </form>
     )
 };
 
 export default AddRecommendation;
-

@@ -1,9 +1,3 @@
-.AddRecommendation {
-    margin: 0 auto;
-    width: 70%;
-}
-
-
 .Form {
     display: flex;
     flex-flow: column;
@@ -26,16 +20,17 @@
     padding: 0.5rem 1rem;
 }
 
-.Button:hover {
+.Button:hover:enabled {
     background-color: #C8E6C9;
     cursor: pointer;
 }
 
-.TextArea {
-    outline: none;
-    resize: none;
-    border: 1px solid #E0E0E0;
+.Button:disabled {
+    border: none;
+    background-color: #E0E0E0;
+    color: #BDBDBD;
 }
+
 
 .InputContainer {
     width: 100%;
@@ -45,13 +40,6 @@
 
 }
 
-.FormInputs {
-    border: 1px solid #E0E0E0;
-    border-radius: 4px;
-    padding: 0.5rem;
-    width: 100%;
-
-}
 
 .FormLabels {
     font-size: 0.75rem;

@@ -20,9 +20,10 @@ const Additions = (props) => {
     }
 
     const componentSelection = componentsArray.map(component => {
-        if (component.id === selected) return <div className={[classes.Header, classes.Selected].join(' ')} >{component.header}</div>
+        if (component.id === selected) return <div key={component.id} className={[classes.Header, classes.Selected].join(' ')} >{component.header}</div>
         return <div
             className={[classes.Header, classes.Unselected].join(' ')}
+            key={component.id}
             onClick={() => selectComponent(component.id)}> {component.header}</div >
     })
 
@@ -31,7 +32,9 @@ const Additions = (props) => {
             <div className={classes.MenuList}>
                 {componentSelection}
             </div>
-            {selectedComponent.component}
+            <div className={classes.componentContainer}>
+                {selectedComponent.component}
+            </div>
         </div>
     )
 };
