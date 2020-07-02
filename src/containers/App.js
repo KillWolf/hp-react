@@ -7,7 +7,7 @@ import Contact from '../components/Contact/Contact';
 import classes from './App.module.css';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from '../components/Navbar/Navbar';
-import addRecommendation from '../components/Auth/Additions';
+import AuthContainer from '../components/Auth/AuthContainer';
 
 function App() {
 
@@ -17,7 +17,7 @@ function App() {
       <Switch>
         <Route path="/advocacy" component={Advocacy} />
         <Route path="/recommendations" component={Recommendations} />
-        <Route path="/xyz" component={addRecommendation} />
+        <Route path="/xyz" component={AuthContainer} />
         <Route path="/blog" component={Blog} />
         <Route path="/contact" component={Contact} />
         <Route path="/" component={Home} />

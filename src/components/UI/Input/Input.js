@@ -9,8 +9,6 @@ const input = (props) => {
         inputClasses.push(classes.TextArea)
     }
 
-    console.log(props);
-
     if (!props.valid && props.shouldValidate && props.touched) {
         inputClasses.push(classes.Invalid);
     }

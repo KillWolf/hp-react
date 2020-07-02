@@ -75,8 +75,6 @@ const AddRecommendation = (props) => {
             }
         }
 
-        console.log(updatedConfig);
-
         setConfig(updatedConfig)
     }
 
