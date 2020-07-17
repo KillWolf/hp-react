@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { onValueChangeHandler } from '../../../utility/Helpers/Helpers'
+import { authenticateUser } from '../../../utility/Auth/Token'
 import Input from '../../UI/Input/Input';
 import classes from './Authenticate.module.css';
 
@@ -39,6 +40,7 @@ const Authenticate = (props) => {
 
     }
 
+
     const [config, setConfig] = useState(initialState);
 
     const formsElementArray = [];
@@ -50,6 +52,13 @@ const Authenticate = (props) => {
             });
         }
     }
+
+    const onSignInHandler = (event) => {
+        event.preventDefault();
+        props.onAuth();
+        authenticateUser(config.signInForm.email.value, config.signInForm.password.value, props.onAuth);
+    }
+
 
 
     const formInput = formsElementArray.map(formElement => {

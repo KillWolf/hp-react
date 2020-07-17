@@ -1,0 +1,22 @@
+.Blog {
+    display: flex;
+    flex-flow: column;
+    text-align: left;
+    padding: 2rem;
+    width: 80%;
+    margin: 0 auto;
+    background-color: #F5F5F5;
+}
+
+.DescriptiveText {
+    display: flex;
+}
+
+.DescriptiveText div:first-child {
+    padding: 0 0.5rem 0 0;
+}
+
+.SeparatingLine {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #2979FF;
+}

@@ -6,12 +6,17 @@
 	justify-content: center;
 	width: 100%;
 	background-color: white;
+	border-bottom: 1px solid #E0E0E0;
 }
-
+ 
 .Logo {
 	padding: 1rem;
 	height: 80px;
 	transition: 0.4s;
+}
+
+.LogoLink:hover {
+	border-bottom: none !important;
 }
 
 .LogoSmall {

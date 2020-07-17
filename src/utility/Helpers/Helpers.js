@@ -1,5 +1,6 @@
 export const extractData = (object) => {
     let dataObject = {};
+    console.log('object', object);
     Object.keys(object).forEach(key => {
         if (key !== 'formIsValid') dataObject[key] = object[key].value;
     })
@@ -37,3 +38,7 @@ export const onValueChangeHandler = (event, config, configKey, key, setMethod) =
 
     setMethod(updatedConfig)
 }
+
+export const linkBuilder = (title) => {
+    return title.toLowerCase().replace(/\s/g, "-");
+} 

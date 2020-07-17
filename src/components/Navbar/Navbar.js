@@ -21,13 +21,14 @@ const Navbar = (props) => {
     return (
         <nav className={classes.Nav} id="Nav">
             <div className={classes.NavWrapper}>
-                <Link to='/'><img className={classes.Logo} src={logo} id="Logo" alt="" /></Link>
+                <Link class={classes.LogoLink} to='/'><img className={classes.Logo} src={logo} id="Logo" alt="" /></Link>
                 <ul>
                     <li><NavLink activeClassName={classes.Active} exact to="/">Home</NavLink></li>
                     <li><NavLink activeClassName={classes.Active} to="/Advocacy">Advocacy</NavLink></li>
                     <li><NavLink activeClassName={classes.Active} to="/Recommendations">Recommendations</NavLink></li>
-                    <li><NavLink activeClassName={classes.Active} to="/Blog">Blog</NavLink></li>
+                    <li><NavLink activeClassName={classes.Active} to="/Blogs">Blogs</NavLink></li>
                     <li><NavLink activeClassName={classes.Active} to="/Contact">Contact</NavLink></li>
+                    <li><NavLink activeClassName={classes.Active} to="/xyz">TEMP</NavLink></li>
                 </ul>
             </div>
         </nav>

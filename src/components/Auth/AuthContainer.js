@@ -1,30 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import classes from './AuthContaimer.module.css';
+import classes from './AuthContainer.module.css';
 import AddRecommendation from './AddRecommendations/AddRecommendations';
-import { checkAuthentication, authenticateUser } from '../../utility/Auth/Token'
+import { checkAuthentication } from '../../utility/Auth/Token'
 import AddBlog from './AddBlogs/AddBlogs';
 import Authenticate from './Authenticate/Authenticate';
 import Spinner from '../UI/Spinner/Spinner';
 import Aux from '../../hoc/Aux';
 
-const Additions = () => {
+const AuthContainer = () => {
 
     const [selected, setSelected] = useState('recommendation');
-    const [loading, setLoading] = useState(true);
-    const [authenticated, setAuthenticated] = useState(checkAuthentication());
+    const [state, setState] = useState({ loading: false, authenticated: checkAuthentication() });
+
+    const updateStateWithNewInformation = () => {
+        setState(prevState => ({ loading: !prevState.loading, authenticated: checkAuthentication() }));
+    }
+
 
     //TODO
-    //1. SETUP WATCHER TO WARN ABOUT IMPENDING LOT OUT
+    //1. SETUP WATCHER TO WARN ABOUT IMPENDING LOG OUT
     //2. PASS LOGIN STUFF FROM HERE TO AUTH TO MAKE SURE IT CAN UPDATE THE COMPONENT
     //3. MAYBE SEPERATE INTO SEPERATE MODULES? TOO MUCH IS HAPPENING HERE
-
-    const onSignInHandler = (event) => {
-        event.preventDefault();
-        setLoading(true);
-        useEffect(() => {
-            authenticateUser(config.signInForm.email.value, config.signInForm.password.value, setAuthenticated);
-        }, []);
-    }
+    //3B. Make one authentication module that enables admin link, and redirect to it aswell (just like in burgerbuilder)
 
     const componentsArray = [
         { component: <AddRecommendation />, header: 'TILFØJ ANBEFALING', id: 'recommendation' },
@@ -45,9 +42,9 @@ const Additions = () => {
             onClick={() => selectComponent(component.id)}> {component.header}</div >
     })
 
-    let template = <Spinner />
+    let template = <Spinner />;
 
-    if (authenticated) {
+    if (state.authenticated && !state.loading) {
         template = (
             <Aux>
                 <div className={classes.MenuList}>
@@ -58,15 +55,20 @@ const Additions = () => {
                 </div>
             </Aux>
         )
-    } else {
-        template = <Authenticate signIn={onSignInHandler} />
+    } else if (!state.authenticated && !state.loading) {
+        template = (
+            <Aux>
+                <h2>Log in</h2>
+                <Authenticate onAuth={updateStateWithNewInformation} />
+            </Aux>
+        )
     }
 
     return (
-        <div className={classes.Additions}>
+        <div className={classes.AuthContainer}>
             {template}
         </div>
     )
 };
 
-export default Additions;
+export default AuthContainer;

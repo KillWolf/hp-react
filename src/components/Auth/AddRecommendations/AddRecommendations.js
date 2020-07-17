@@ -1,50 +1,53 @@
 import React, { useState } from 'react';
 import classes from './AddRecommendations.module.css';
-import { extractData, checkValidity } from '../../../utility/Helpers/Helpers';
-import axios from '../../../axios-instances/axios-firebase'
-import Input from '../../UI/Input/Input'
+import { extractData, onValueChangeHandler } from '../../../utility/Helpers/Helpers';
+import { getToken } from '../../../utility/Auth/Token';
+import axios from '../../../axios-instances/axios-firebase';
+import Input from '../../UI/Input/Input';
 
 const AddRecommendation = (props) => {
 
     const initialState = {
-        title: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'TITEL'
+        addRecommendation: {
+            title: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'TITEL'
+                },
+                value: '',
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false
             },
-            value: '',
-            validation: {
-                required: true,
+            author: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'SKREVET AF'
+                },
+                value: '',
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false
             },
-            valid: false,
-            touched: false
-        },
-        author: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'SKREVET AF'
+            content: {
+                elementType: 'textarea',
+                elementConfig: {
+                    type: 'text',
+                    label: 'CITAT'
+                },
+                value: '',
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false
             },
-            value: '',
-            validation: {
-                required: true,
-            },
-            valid: false,
-            touched: false
-        },
-        content: {
-            elementType: 'textarea',
-            elementConfig: {
-                type: 'text',
-                label: 'CITAT'
-            },
-            value: '',
-            validation: {
-                required: true,
-            },
-            valid: false,
-            touched: false
         },
         formIsValid: false
     }
@@ -59,35 +62,15 @@ const AddRecommendation = (props) => {
     //7. FFIND SIMILARITIES
     const [config, setConfig] = useState(initialState)
 
-    const onValueChangeHandler = (event, key) => {
-        const updatedConfig = { ...config };
-        const updatedConfigElement = { ...config[key] }
-        updatedConfigElement.value = event.target.value;
-        updatedConfigElement.valid = checkValidity(updatedConfigElement.value, updatedConfigElement.validation);
-        updatedConfigElement.touched = true;
-        updatedConfig[key] = updatedConfigElement;
-
-        let formIsValid = true;
-        for (let key in updatedConfig) {
-            if (key !== 'formIsValid') {
-                console.log(updatedConfig[key].valid)
-                updatedConfig.formIsValid = updatedConfig[key].valid && formIsValid;
-            }
-        }
-
-        setConfig(updatedConfig)
-    }
-
     const formsElementArray = [];
-    for (let key in config) {
+    for (let key in config.addRecommendation) {
         if (key !== 'formIsValid') {
             formsElementArray.push({
                 id: key,
-                ...config[key]
+                ...config.addRecommendation[key]
             });
         }
     }
-
 
     const formInput = formsElementArray.map(formElement => {
         return (
@@ -96,7 +79,7 @@ const AddRecommendation = (props) => {
                 <Input
                     elementType={formElement.elementType}
                     elementConfig={formElement.elementConfig}
-                    changed={(event) => onValueChangeHandler(event, formElement.id)}
+                    changed={(event) => onValueChangeHandler(event, config, 'addRecommendation', formElement.id, setConfig)}
                     value={formElement.value}
                     valid={formElement.valid}
                     shouldValidate={formElement.validation}
@@ -107,8 +90,9 @@ const AddRecommendation = (props) => {
     })
 
     const recommedendationHandler = (event) => {
+        console.log(getToken());
         event.preventDefault();
-        axios.post('/recommendations.json', extractData(config))
+        axios.post('/recommendations.json?auth=' + getToken(), extractData(config))
             .then(response => {
                 setConfig(initialState)
             })

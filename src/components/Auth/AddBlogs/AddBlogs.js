@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import classes from './AddBlogs.module.css';
-import { extractData, checkValidity } from '../../../utility/Helpers/Helpers';
+import { extractData, checkValidity, linkBuilder } from '../../../utility/Helpers/Helpers';
 import axios from '../../../axios-instances/axios-firebase'
-import Input from '../../UI/Input/Input'
+import { getToken } from '../../../utility/Auth/Token';
+import Input from '../../UI/Input/Input';
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const AddBlogs = (props) => {
+
+    let currentContent = null;
 
     const initialState = {
         title: {
@@ -20,11 +25,11 @@ const AddBlogs = (props) => {
             valid: false,
             touched: false
         },
-        content: {
-            elementType: 'textarea',
+        excerpt: {
+            elementType: 'input',
             elementConfig: {
                 type: 'text',
-                label: 'CITAT'
+                label: 'EXCERPT'
             },
             value: '',
             validation: {
@@ -44,7 +49,8 @@ const AddBlogs = (props) => {
     // 5. PUT FORM INPUTS INTO DIFFERENT COMPONENTS
     // 6. ADD REDUX?
     //7. FFIND SIMILARITIES
-    const [config, setConfig] = useState(initialState)
+    const [config, setConfig] = useState(initialState);
+    const [showMessage, setShowMessage] = useState({ success: true, show: false });
 
     const onValueChangeHandler = (event, key) => {
         const updatedConfig = { ...config };
@@ -67,7 +73,7 @@ const AddBlogs = (props) => {
 
     const formsElementArray = [];
     for (let key in config) {
-        if (key !== 'formIsValid') {
+        if (key !== 'formIsValid' && key !== 'content') {
             formsElementArray.push({
                 id: key,
                 ...config[key]
@@ -93,10 +99,14 @@ const AddBlogs = (props) => {
         )
     })
 
-    const recommedendationHandler = (event) => {
+
+    const blogHandler = (event) => {
         event.preventDefault();
-        config.date.value = new Date();
-        axios.post('/blogs.json', extractData(config))
+        config.date = { value: new Date() };
+        config.author = { value: 'Hanne Pilegaard' }
+        config.content = { value: currentContent };
+        config.publicLink = {value: linkBuilder(config.title.value)};
+        axios.post('/blogs.json?auth=' + getToken(), extractData(config))
             .then(() => {
                 setConfig(initialState)
             })
@@ -106,8 +116,26 @@ const AddBlogs = (props) => {
     }
 
     return (
-        <form className={classes.Form} onSubmit={recommedendationHandler}>
+        <form className={classes.Form} onSubmit={blogHandler}>
             {formInput}
+            <CKEditor
+                editor={ClassicEditor}
+                data="Skriv løs!"
+                onInit={editor => {
+                    // You can store the "editor" and use when it is needed.
+                    console.log('Editor is ready to use!', editor);
+                }}
+                onChange={(event, editor) => {
+                    currentContent = editor.getData();
+                    //console.log( { event, editor, data } );
+                }}
+                onBlur={(event, editor) => {
+                    console.log('Blur.', editor);
+                }}
+                onFocus={(event, editor) => {
+                    console.log('Focus.', editor);
+                }}
+            />
             <button
                 className={classes.FormInputs, classes.Button}
                 disabled={!config.formIsValid} type="submit" value="">
