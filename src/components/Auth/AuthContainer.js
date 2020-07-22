@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import classes from './AuthContainer.module.css';
+import globalClasses from '../../utility/Global/Common.module.css';
 import AddRecommendation from './AddRecommendations/AddRecommendations';
 import { checkAuthentication } from '../../utility/Auth/Token'
 import AddBlog from './AddBlogs/AddBlogs';
@@ -9,13 +10,14 @@ import Aux from '../../hoc/Aux';
 
 const AuthContainer = () => {
 
+    const rootClasses = [globalClasses.Panel, classes.AuthContainer].join(' ');
+
     const [selected, setSelected] = useState('recommendation');
     const [state, setState] = useState({ loading: false, authenticated: checkAuthentication() });
 
     const updateStateWithNewInformation = () => {
         setState(prevState => ({ loading: !prevState.loading, authenticated: checkAuthentication() }));
     }
-
 
     //TODO
     //1. SETUP WATCHER TO WARN ABOUT IMPENDING LOG OUT
@@ -65,7 +67,7 @@ const AuthContainer = () => {
     }
 
     return (
-        <div className={classes.AuthContainer}>
+        <div className={rootClasses}>
             {template}
         </div>
     )

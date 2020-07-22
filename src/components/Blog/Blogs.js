@@ -6,11 +6,11 @@ import logo from '../../assets/images/Logo.png';
 import HeroImage from '../../utility/HeroImage/HeroImage'
 import Spinner from '../UI/Spinner/Spinner'
 import classes from './Blogs.module.css';
+import globalClasses from '../../utility/Global/Common.module.css';
 
-const Blogs = (props) => {
+const Blogs = () => {
 
-    //TODO
-    //1. CAN I COMBINE BLOGS AND BLOG?
+    const rootClasses = [globalClasses.Panel, classes.Blogs].join(' ');
     const [config, setConfig] = useState({ loading: true, blogs: [] });
     useEffect(() => {
         axios.get('/blogs.json')
@@ -54,7 +54,7 @@ const Blogs = (props) => {
     return (
         <div>
             <HeroImage headerString="BLOGS" imageName="Mountain" />
-            <div className={classes.Blogs}>
+            <div className={rootClasses}>
                 <div className={classes.Cards}>
                     {content}
                 </div>

@@ -1,0 +1,11 @@
+.Panel {
+    display: flex;
+    flex-flow: column;
+    border-radius: 6px;
+    text-align: left;
+    padding: 2rem;
+    width: 80%;
+    margin: 2rem auto;
+    background-color: #F5F5F5;
+    border: 1px solid #E0E0E0;
+  }

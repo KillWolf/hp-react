@@ -1,15 +1,36 @@
 import React, { useState } from 'react';
-import classes from './AddBlogs.module.css';
-import { extractData, checkValidity, linkBuilder } from '../../../utility/Helpers/Helpers';
-import axios from '../../../axios-instances/axios-firebase'
-import { getToken } from '../../../utility/Auth/Token';
-import Input from '../../UI/Input/Input';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import axios from '../../../axios-instances/axios-firebase'
+import { extractData, checkValidity, linkBuilder } from '../../../utility/Helpers/Helpers';
+import { getToken } from '../../../utility/Auth/Token';
+import Input from '../../UI/Input/Input';
+import classes from './AddBlogs.module.css';
 
-const AddBlogs = (props) => {
-
+const AddBlogs = () => {
     let currentContent = null;
+    let editor = () => {
+        return (
+            <CKEditor
+                editor={ClassicEditor}
+                data="Skriv løs!"
+                onInit={editor => {
+                    // You can store the "editor" and use when it is needed.
+                    console.log('Editor is ready to use!', editor);
+                }}
+                onChange={(event, editor) => {
+                    currentContent = editor.getData();
+                    //console.log( { event, editor, data } );
+                }}
+                onBlur={(event, editor) => {
+                    console.log('Blur.', editor);
+                }}
+                onFocus={(event, editor) => {
+                    console.log('Focus.', editor);
+                }}
+            />
+        )
+    }
 
     const initialState = {
         title: {
@@ -41,14 +62,6 @@ const AddBlogs = (props) => {
         formIsValid: false
     }
 
-    //TODO
-    //1. AUTHENTICATION
-    //2. PREVIEW FOR MOM TO SEE IF IT LOOKS GOOD BEFORE POSTING (Only button after posting data is preview, then submit will be available)
-    //3. MAKE IT POSSIBLE TO POPULATE IF EDITING
-    //4. VERIFICATION THAT A THING HAS BEEN POSTED
-    // 5. PUT FORM INPUTS INTO DIFFERENT COMPONENTS
-    // 6. ADD REDUX?
-    //7. FFIND SIMILARITIES
     const [config, setConfig] = useState(initialState);
     const [showMessage, setShowMessage] = useState({ success: true, show: false });
 
@@ -105,37 +118,20 @@ const AddBlogs = (props) => {
         config.date = { value: new Date() };
         config.author = { value: 'Hanne Pilegaard' }
         config.content = { value: currentContent };
-        config.publicLink = {value: linkBuilder(config.title.value)};
+        config.publicLink = { value: linkBuilder(config.title.value) };
         axios.post('/blogs.json?auth=' + getToken(), extractData(config))
             .then(() => {
                 setConfig(initialState)
             })
             .catch(error => {
-                console.log(error);
+                console.log(error); 
             });
     }
 
     return (
         <form className={classes.Form} onSubmit={blogHandler}>
             {formInput}
-            <CKEditor
-                editor={ClassicEditor}
-                data="Skriv løs!"
-                onInit={editor => {
-                    // You can store the "editor" and use when it is needed.
-                    console.log('Editor is ready to use!', editor);
-                }}
-                onChange={(event, editor) => {
-                    currentContent = editor.getData();
-                    //console.log( { event, editor, data } );
-                }}
-                onBlur={(event, editor) => {
-                    console.log('Blur.', editor);
-                }}
-                onFocus={(event, editor) => {
-                    console.log('Focus.', editor);
-                }}
-            />
+            {editor()}
             <button
                 className={classes.FormInputs, classes.Button}
                 disabled={!config.formIsValid} type="submit" value="">

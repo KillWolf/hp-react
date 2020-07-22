@@ -1,9 +1,5 @@
 .AuthContainer {
-    margin: 0 auto;
-    width: 80%;
     margin-top: 200px;
-    background-color: #F5F5F5;
-    border: 1px solid #E0E0E0;
 }
 
 .ComponentContainer {
@@ -21,6 +17,7 @@
 
 .MenuList {
     display: flex;
+    margin-top: -2rem;
 }
 
 

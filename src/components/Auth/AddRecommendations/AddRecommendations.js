@@ -5,7 +5,7 @@ import { getToken } from '../../../utility/Auth/Token';
 import axios from '../../../axios-instances/axios-firebase';
 import Input from '../../UI/Input/Input';
 
-const AddRecommendation = (props) => {
+const AddRecommendation = () => {
 
     const initialState = {
         addRecommendation: {
@@ -51,15 +51,7 @@ const AddRecommendation = (props) => {
         },
         formIsValid: false
     }
-
-    //TODO
-    //1. AUTHENTICATION
-    //2. PREVIEW FOR MOM TO SEE IF IT LOOKS GOOD BEFORE POSTING (Only button after posting data is preview, then submit will be available)
-    //3. MAKE IT POSSIBLE TO POPULATE IF EDITING
-    //4. VERIFICATION THAT A THING HAS BEEN POSTED
-    // 5. PUT FORM INPUTS INTO DIFFERENT COMPONENTS
-    // 6. ADD REDUX?
-    //7. FFIND SIMILARITIES
+    
     const [config, setConfig] = useState(initialState)
 
     const formsElementArray = [];

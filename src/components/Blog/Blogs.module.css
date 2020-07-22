@@ -1,11 +1,7 @@
 .Blogs {
-    display: flex;
-    flex-flow: column;
-    text-align: left;
-    padding: 2rem;
-    width: 80%;
-    margin: 0 auto;
+  /* empty for now */
 }
+
 .Cards {
     display: flex;
     flex-flow: row;

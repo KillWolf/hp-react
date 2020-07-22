@@ -1,11 +1,5 @@
 .Recommendations {
-    display: flex;
-    flex-flow: column;
-    text-align: left;
-    padding: 2rem;
-    width: 80%;
-    margin: 0 auto;
-    background-color: #F5F5F5;
+    /* empty for now */
 }
 
 .Blockquote {
