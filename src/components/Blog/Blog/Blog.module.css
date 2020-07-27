@@ -1,5 +1,8 @@
-.Blog {
-    /* Empty for now */
+.Blog h1 {
+    font-style: oblique;
+    font-size: 3rem;
+    width: 80%;
+    margin: 200px auto 0 auto;
 }
 
 .DescriptiveText {
@@ -13,4 +16,8 @@
 .SeparatingLine {
     padding: 0.5rem 0;
     border-bottom: 1px solid #2979FF;
+}
+
+.Error {
+    margin-top: 200px;
 }

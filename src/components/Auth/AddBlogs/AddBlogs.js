@@ -1,37 +1,20 @@
-import React, { useState } from 'react';
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import React, { useState, useRef } from 'react';
+import JoditEditor from "jodit-react";
 import axios from '../../../axios-instances/axios-firebase'
 import { extractData, checkValidity, linkBuilder } from '../../../utility/Helpers/Helpers';
 import { getToken } from '../../../utility/Auth/Token';
 import Input from '../../UI/Input/Input';
 import classes from './AddBlogs.module.css';
+import { configure } from '@testing-library/react';
 
 const AddBlogs = () => {
     let currentContent = null;
-    let editor = () => {
-        return (
-            <CKEditor
-                editor={ClassicEditor}
-                data="Skriv løs!"
-                onInit={editor => {
-                    // You can store the "editor" and use when it is needed.
-                    console.log('Editor is ready to use!', editor);
-                }}
-                onChange={(event, editor) => {
-                    currentContent = editor.getData();
-                    //console.log( { event, editor, data } );
-                }}
-                onBlur={(event, editor) => {
-                    console.log('Blur.', editor);
-                }}
-                onFocus={(event, editor) => {
-                    console.log('Focus.', editor);
-                }}
-            />
-        )
+    const editor = useRef(null)
+    const editorConfig = {
+        readonly: false, // all options from https://xdsoft.net/jodit/doc/
+        askBeforePasteHTML: false
     }
-
+    
     const initialState = {
         title: {
             elementType: 'input',
@@ -59,11 +42,22 @@ const AddBlogs = () => {
             valid: false,
             touched: false
         },
-        formIsValid: false
+        content: null,
+        formIsValid: false,
+        error: false
     }
 
     const [config, setConfig] = useState(initialState);
-    const [showMessage, setShowMessage] = useState({ success: true, show: false });
+    const editorVariable = (
+        <JoditEditor
+            ref={editor}
+            value={config.content}
+            config={editorConfig}
+            tabIndex={1} // tabIndex of textarea
+            onBlur={(newContent => setConfig(prevState => ({...prevState, content: newContent})))} // preferred to use only this option to update the content for performance reasons
+            onChange={newContent => { }}
+        />
+    )
 
     const onValueChangeHandler = (event, key) => {
         const updatedConfig = { ...config };
@@ -75,18 +69,20 @@ const AddBlogs = () => {
 
         let formIsValid = true;
         for (let key in updatedConfig) {
-            if (key !== 'formIsValid') {
+            if (key !== 'formIsValid' && key !== 'error' && key !== 'content') {
                 console.log(updatedConfig[key].valid)
                 updatedConfig.formIsValid = updatedConfig[key].valid && formIsValid;
             }
         }
+
+        console.log(config, editor);
 
         setConfig(updatedConfig)
     }
 
     const formsElementArray = [];
     for (let key in config) {
-        if (key !== 'formIsValid' && key !== 'content') {
+        if (key !== 'formIsValid' && key !== 'content' && key !== 'error' && key !== 'content') {
             formsElementArray.push({
                 id: key,
                 ...config[key]
@@ -117,21 +113,21 @@ const AddBlogs = () => {
         event.preventDefault();
         config.date = { value: new Date() };
         config.author = { value: 'Hanne Pilegaard' }
-        config.content = { value: currentContent };
+        config.content = { value: config.content };
         config.publicLink = { value: linkBuilder(config.title.value) };
         axios.post('/blogs.json?auth=' + getToken(), extractData(config))
             .then(() => {
                 setConfig(initialState)
             })
             .catch(error => {
-                console.log(error); 
+                console.log(error);
             });
     }
 
     return (
         <form className={classes.Form} onSubmit={blogHandler}>
             {formInput}
-            {editor()}
+            {editorVariable}
             <button
                 className={classes.FormInputs, classes.Button}
                 disabled={!config.formIsValid} type="submit" value="">

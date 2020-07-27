@@ -19,6 +19,9 @@ const Blogs = () => {
                 const blogsArray = entries.map(entry => {
                     return { id: entry[0], ...entry[1], date: new Date(entry[1].date) }
                 })
+                blogsArray.sort(function (a, b) {
+                    return new Date(b.date) - new Date(a.date);
+                });
                 setConfig({ loading: false, blogs: blogsArray })
             })
             .catch(error => {
@@ -33,7 +36,7 @@ const Blogs = () => {
         content = (
             <Aux>
                 {config.blogs.map(blog => (
-                    <NavLink key={blog.id} style={{border: 'none'}} to={{pathname: '/blog', search: blog.publicLink, state: {blog: blog}}}>
+                    <NavLink key={blog.id} style={{ border: 'none' }} to={{ pathname: '/blog', search: blog.publicLink, state: { blog: blog } }}>
                         <div className={classes.Card}>
                             <div className={classes.CardLogo}>
                                 <img src={logo} width="100" alt="Logo" />

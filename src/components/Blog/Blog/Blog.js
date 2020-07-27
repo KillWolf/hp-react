@@ -15,13 +15,13 @@ const Blog = (props) => {
     let blog = null;
     let content = null;
     const indexOfQuestionMark = window.location.href.indexOf('?') + 1;
-    const rootClasses = [classes.Blog, globalClasses.Panel].join(' ');
+    let rootClasses = [globalClasses.Panel];
 
 
-    const [config, setConfig] = useState({ loading: true, blog: {} });
+    const [config, setConfig] = useState({ loading: true, blog: {}, error: false });
     useEffect(() => {
         if (props.location.state && props.location.state.blog) {
-            setConfig({ loading: false, blog: props.location.state.blog })
+            setConfig({ loading: false, blog: props.location.state.blog, error: false })
         } else {
             axios.get('/blogs.json')
                 .then(response => {
@@ -34,19 +34,22 @@ const Blog = (props) => {
                             return window.location.href.substring(indexOfQuestionMark) === blog.publicLink;
                         })
                     blog = blog ? blog : {};
-                    setConfig({ loading: false, blog: blog })
+                    setConfig({ loading: false, blog: blog, error: blog.id ? false : true})
                 })
                 .catch(error => {
-
+                    setConfig({loading: false, blog: {}, error: true})
                 })
         }
     }, [])
+
+    if(config.error) {
+        rootClasses.push(classes.Error);
+    }
 
 
     if (config.blog.id) {
         content = (
             <div>
-                <h2>{config.blog.title}</h2>
                 <div className={classes.DescriptiveText}>
                     <div><strong>{config.blog.author}</strong></div>
                     <div><i>{config.blog.date.getDate() + "-" + (config.blog.date.getMonth() + 1) + "-" + config.blog.date.getFullYear()}</i></div>
@@ -58,13 +61,14 @@ const Blog = (props) => {
     } else if(config.loading) {
         content = <Spinner />;
     } else {
-        content = <div>Bloggen er ikke fundet, gå tilbage til <NavLink to='/blogs'>oversigten.</NavLink></div>
+        content = <div>Bloggen er ikke fundet, gå tilbage til <NavLink to='/blogs' className={globalClasses.Link}>oversigten.</NavLink></div>
     }
 
     return (
-        <div>
-            <HeroImage headerString="BLOG" imageName="Mountain" />
-            <div className={rootClasses}>
+        <div className={classes.Blog}>
+            {/*config.error ? null : <HeroImage headerString={config.blog.title} imageName="Mountain" />*/}
+            <h1>{config.blog.title}</h1>
+            <div className={rootClasses.join(' ')}>
                 {content}
             </div>
         </div>

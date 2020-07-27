@@ -5,11 +5,13 @@
 .Cards {
     display: flex;
     flex-flow: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .Card {
-    height: 300px;
-    width: 200px;
+    min-height: 300px;
+    width: 190px;
     padding: 1rem;
     margin: 2rem;
     display: flex;
