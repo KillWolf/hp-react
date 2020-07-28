@@ -51,8 +51,9 @@ const AddRecommendation = () => {
         },
         formIsValid: false
     }
-    
+
     const [config, setConfig] = useState(initialState)
+    const [responseMessage, setResponseMessage] = useState({ message: '', success: true, enable: false })
 
     const formsElementArray = [];
     for (let key in config.addRecommendation) {
@@ -81,20 +82,33 @@ const AddRecommendation = () => {
         )
     })
 
-    const recommedendationHandler = (event) => {
-        console.log(getToken());
+    const recommendationHandler = (event) => {
         event.preventDefault();
-        axios.post('/recommendations.json?auth=' + getToken(), extractData(config))
+        axios.post('/recommendations.json?auth=' + getToken(), extractData(config.addRecommendation))
             .then(response => {
+                setResponseMessage({ message: `${config.addRecommendation.title.value} var gemt.`, success: true, enable: true })
+                setTimeout(() => {
+                    setResponseMessage({ message: '', success: true, enable: false })
+                }, 5000)
                 setConfig(initialState)
             })
             .catch(error => {
-                console.log(error);
+                setResponseMessage({
+                    message: `${config.addRecommendation.title.value} var ikke gemt. Prøv igen, eller kontakt sønnikke`,
+                    success: false,
+                    enable: true
+                });
+                setTimeout(() => {
+                    setResponseMessage({ message: '', success: true, enable: false })
+                }, 10000);
             });
     }
 
     return (
-        <form className={classes.Form} onSubmit={recommedendationHandler}>
+        <form className={classes.Form} onSubmit={recommendationHandler}>
+            {responseMessage.enable
+                ? <div className={responseMessage.success ? classes.ResponseSuccess : classes.ResponseError}>{responseMessage.message}</div>
+                : null}
             {formInput}
             <button
                 className={classes.FormInputs, classes.Button}

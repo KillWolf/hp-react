@@ -1,0 +1,19 @@
+.Error {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.Error button {
+    margin-top: 1rem;
+    border: none;
+    padding: 0.3rem;
+    border-radius: 4px;
+}
+
+.Error button:hover {
+    background-color: #ccc;
+    padding: 0.3rem;
+    border-radius: 4px;
+    cursor: pointer;
+}

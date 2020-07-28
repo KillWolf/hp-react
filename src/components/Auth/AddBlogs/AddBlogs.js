@@ -1,20 +1,13 @@
 import React, { useState, useRef } from 'react';
-import JoditEditor from "jodit-react";
 import axios from '../../../axios-instances/axios-firebase'
 import { extractData, checkValidity, linkBuilder } from '../../../utility/Helpers/Helpers';
 import { getToken } from '../../../utility/Auth/Token';
 import Input from '../../UI/Input/Input';
 import classes from './AddBlogs.module.css';
-import { configure } from '@testing-library/react';
+import { Editor } from '@tinymce/tinymce-react';
 
 const AddBlogs = () => {
-    let currentContent = null;
-    const editor = useRef(null)
-    const editorConfig = {
-        readonly: false, // all options from https://xdsoft.net/jodit/doc/
-        askBeforePasteHTML: false
-    }
-    
+
     const initialState = {
         title: {
             elementType: 'input',
@@ -48,16 +41,6 @@ const AddBlogs = () => {
     }
 
     const [config, setConfig] = useState(initialState);
-    const editorVariable = (
-        <JoditEditor
-            ref={editor}
-            value={config.content}
-            config={editorConfig}
-            tabIndex={1} // tabIndex of textarea
-            onBlur={(newContent => setConfig(prevState => ({...prevState, content: newContent})))} // preferred to use only this option to update the content for performance reasons
-            onChange={newContent => { }}
-        />
-    )
 
     const onValueChangeHandler = (event, key) => {
         const updatedConfig = { ...config };
@@ -75,7 +58,6 @@ const AddBlogs = () => {
             }
         }
 
-        console.log(config, editor);
 
         setConfig(updatedConfig)
     }
@@ -117,6 +99,7 @@ const AddBlogs = () => {
         config.publicLink = { value: linkBuilder(config.title.value) };
         axios.post('/blogs.json?auth=' + getToken(), extractData(config))
             .then(() => {
+                
                 setConfig(initialState)
             })
             .catch(error => {
@@ -124,10 +107,35 @@ const AddBlogs = () => {
             });
     }
 
+    //EDITOR 
+
+    const handleEditorChange = (content, editor) => {
+        config.content = content;
+    }
+
+    const editor = (
+    <Editor
+        initialValue="<p>This is the initial content of the editor</p>"
+        init={{
+            height: 500,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar:
+                'undo redo | formatselect | bold italic backcolor | \
+             alignleft aligncenter alignright alignjustify | \
+             bullist numlist outdent indent | removeformat | help'
+        }}
+        onEditorChange={handleEditorChange}
+    />)
+
     return (
         <form className={classes.Form} onSubmit={blogHandler}>
             {formInput}
-            {editorVariable}
+            {editor}
             <button
                 className={classes.FormInputs, classes.Button}
                 disabled={!config.formIsValid} type="submit" value="">

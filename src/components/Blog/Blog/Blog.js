@@ -65,9 +65,8 @@ const Blog = (props) => {
     }
 
     return (
-        <div className={classes.Blog}>
-            {/*config.error ? null : <HeroImage headerString={config.blog.title} imageName="Mountain" />*/}
-            <h1>{config.blog.title}</h1>
+        <div>
+            <h1 className={globalClasses.Header}>{config.blog.title}</h1>
             <div className={rootClasses.join(' ')}>
                 {content}
             </div>

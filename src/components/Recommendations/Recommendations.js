@@ -4,14 +4,15 @@ import classes from './Recommendations.module.css';
 import globalClasses from '../../utility/Global/Common.module.css';
 import Aux from '../../hoc/Aux';
 import Spinner from '../UI/Spinner/Spinner';
-import HeroImage from '../../utility/HeroImage/HeroImage'
+import { ErrorMessage } from '../../utility/Global/Error/ServiceHandling/Error/ErrorHandling';
 
-const Credentials = () => {
+const Recommendations = () => {
 
     const rootClasses = [globalClasses.Panel, classes.Recommendations].join(' ');
-
     const [recommendations, setRecommendations] = useState({ recommendations: [], loading: true, error: false })
-    useEffect(() => {
+
+    const getRecommendations = () => {
+        setRecommendations({loading: true, recommendations: [], error: false})
         axios.get('/recommendations.json')
             .then(response => {
                 const entries = Object.entries(response.data);
@@ -21,23 +22,26 @@ const Credentials = () => {
                 setRecommendations({ recommendations: recommendationArray, loading: false, error: false })
             })
             .catch(error => {
-                setRecommendations({recommendations: [], loading: false, error: true})
+                setRecommendations({ recommendations: [], loading: false, error: true })
             })
+    }
+    useEffect(() => {
+        getRecommendations();
     }, [])
 
-    let content = <Spinner />;
+    let content = <div className={rootClasses}><Spinner /></div>;
 
     if (recommendations.error) {
-        content = <p>Der opstod et problem. Prøv igen.</p>
+        content = <div className={rootClasses}>{ErrorMessage('Der opstod en fejl.', {message: 'Prøv igen', method: getRecommendations })}</div>
     } else if (!recommendations.loading) {
         content = (
             <Aux>
                 {recommendations.recommendations.map(recommendation => (
-                    <Aux key={recommendation.id}>
+                    <div className={rootClasses} key={recommendation.id}>
                         <h2>{recommendation.title}</h2>
                         <div className={classes.Blockquote}>{recommendation.content}</div>
                         <cite>{recommendation.author}</cite>
-                    </Aux>
+                    </div>
                 ))}
             </Aux>
         )
@@ -45,12 +49,10 @@ const Credentials = () => {
 
     return (
         <div>
-            <HeroImage headerString="RECOMMENDATIONS" imageName="Mountain" />
-            <div className={rootClasses}>
-                {content}
-            </div>
+            <h1 className={globalClasses.Header}>RECOMMENDATIONS</h1>
+            {content}
         </div>
     )
 };
 
-export default Credentials;
+export default Recommendations;

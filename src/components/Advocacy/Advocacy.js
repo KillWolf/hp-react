@@ -8,7 +8,7 @@ const Advocacy = () => {
     const rootClasses = [globalClasses.Panel, classes.Advocacy].join(' ');
     return (
         <Aux>
-            <HeroImage headerString="ADVOCACY" imageName="Canyon" />
+            <h1 className={globalClasses.Header}>ADVOCACY</h1>
             <div className={rootClasses}>
                 ADVOCACY TEXT
             </div>

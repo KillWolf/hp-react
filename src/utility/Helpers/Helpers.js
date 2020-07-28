@@ -1,7 +1,7 @@
 export const extractData = (object) => {
     let dataObject = {};
-    console.log('object', object);
     Object.keys(object).forEach(key => {
+        console.log('extract', object[key].value);
         if (key !== 'formIsValid') dataObject[key] = object[key].value;
     })
     return dataObject;

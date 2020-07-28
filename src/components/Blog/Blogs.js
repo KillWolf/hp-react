@@ -3,16 +3,18 @@ import { NavLink } from 'react-router-dom';
 import axios from '../../axios-instances/axios-firebase'
 import Aux from '../../hoc/Aux';
 import logo from '../../assets/images/Logo.png';
-import HeroImage from '../../utility/HeroImage/HeroImage'
 import Spinner from '../UI/Spinner/Spinner'
 import classes from './Blogs.module.css';
 import globalClasses from '../../utility/Global/Common.module.css';
+import { ErrorMessage } from '../../utility/Global/Error/ServiceHandling/Error/ErrorHandling'
 
 const Blogs = () => {
 
-    const rootClasses = [globalClasses.Panel, classes.Blogs].join(' ');
-    const [config, setConfig] = useState({ loading: true, blogs: [] });
-    useEffect(() => {
+    const rootClasses = [globalClasses.Panel].join(' ');
+    const [config, setConfig] = useState({ loading: true, blogs: [], error: false });
+
+    const getBlogs = () => {
+        setConfig({ loading: true, blogs: [], error: false })
         axios.get('/blogs.json')
             .then(response => {
                 const entries = Object.entries(response.data);
@@ -25,14 +27,19 @@ const Blogs = () => {
                 setConfig({ loading: false, blogs: blogsArray })
             })
             .catch(error => {
-
+                setConfig({ loading: false, blogs: [], error: true })
             })
+    }
+
+    useEffect(() => {
+        getBlogs()
     }, [])
 
-    let content = null;
-    if (config.loading) {
-        content = <Spinner />
-    } else {
+    let content = <Spinner />;
+
+    if (!config.loading && config.error) {
+        content = ErrorMessage('Der opstod en fejl.', { message: 'Prøv igen', method: getBlogs });
+    } else if (!config.loading) {
         content = (
             <Aux>
                 {config.blogs.map(blog => (
@@ -56,7 +63,7 @@ const Blogs = () => {
 
     return (
         <div>
-            <HeroImage headerString="BLOGS" imageName="Mountain" />
+            <h1 className={globalClasses.Header}>WHAT'S UP</h1>
             <div className={rootClasses}>
                 <div className={classes.Cards}>
                     {content}

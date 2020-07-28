@@ -8,7 +8,7 @@ const Contact = () => {
     const rootClasses = [globalClasses.Panel, classes.Contact].join(' ');
     return (
         <Aux>
-            <HeroImage headerString="CONTACT" imageName="Canyon" />
+            <h1 className={globalClasses.Header}>CONTACT</h1>
             <div className={rootClasses}>
                 CONTACT TEXT
             </div>
