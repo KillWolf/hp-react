@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../../axios-instances/axios-firebase'
+import { getBlogs } from '../../../utility/Global/Blogs/BlogStore'
 import { NavLink } from 'react-router-dom';
 import classes from './Blog.module.css';
 import globalClasses from '../../../utility/Global/Common.module.css';
-import HeroImage from '../../../utility/HeroImage/HeroImage'
 import Spinner from '../../UI/Spinner/Spinner';
-import { findByLabelText } from '@testing-library/react';
 
 const Blog = (props) => {
     //TODO
