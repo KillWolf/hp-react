@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import classes from './AuthContainer.module.css';
 import globalClasses from '../../utility/Global/Common.module.css';
 import AddRecommendation from './AddRecommendations/AddRecommendations';
-import { checkAuthentication } from '../../utility/Auth/Token'
+import { checkAuthentication, resetAuthentication } from '../../utility/Auth/Token'
 import AddBlog from './AddBlogs/AddBlogs';
 import Authenticate from './Authenticate/Authenticate';
 import Spinner from '../UI/Spinner/Spinner';
@@ -12,18 +12,21 @@ const AuthContainer = () => {
 
     const rootClasses = [globalClasses.Panel, classes.AuthContainer].join(' ');
 
-    const [selected, setSelected] = useState('recommendation');
-    const [state, setState] = useState({ loading: false, authenticated: checkAuthentication() });
+    const [selected, setSelected] = useState('blog');
+    const [state, setState] = useState({ loading: false, authenticated: checkAuthentication(), selected: 'blog' });
+
+    useEffect(() => {
+        //For unmounting purpose
+        return () => {
+            resetAuthentication();
+            setState(prevState => ({...prevState, loading: false, authenticated: checkAuthentication()}));
+        }
+
+    }, [])
 
     const updateStateWithNewInformation = () => {
-        setState(prevState => ({ loading: !prevState.loading, authenticated: checkAuthentication() }));
+        setState(prevState => ({ ...prevState, loading: !prevState.loading, authenticated: checkAuthentication() }));
     }
-
-    //TODO
-    //1. SETUP WATCHER TO WARN ABOUT IMPENDING LOG OUT
-    //2. PASS LOGIN STUFF FROM HERE TO AUTH TO MAKE SURE IT CAN UPDATE THE COMPONENT
-    //3. MAYBE SEPERATE INTO SEPERATE MODULES? TOO MUCH IS HAPPENING HERE
-    //3B. Make one authentication module that enables admin link, and redirect to it aswell (just like in burgerbuilder)
 
     const componentsArray = [
         { component: <AddRecommendation />, header: 'TILFØJ ANBEFALING', id: 'recommendation' },
@@ -34,6 +37,10 @@ const AuthContainer = () => {
 
     const selectComponent = id => {
         setSelected(id);
+    }
+    
+    const removeError = () => {
+        setState(prevState => ({...prevState, authenticated: {token: false, errorResponse: null}}))
     }
 
     const componentSelection = componentsArray.map(component => {
@@ -46,7 +53,7 @@ const AuthContainer = () => {
 
     let template = <Spinner />;
 
-    if (state.authenticated && !state.loading) {
+    if (state.authenticated.token && !state.loading) {
         template = (
             <Aux>
                 <div className={classes.MenuList}>
@@ -57,20 +64,36 @@ const AuthContainer = () => {
                 </div>
             </Aux>
         )
-    } else if (!state.authenticated && !state.loading) {
+    } else if (!state.authenticated.token && !state.loading) {
         template = (
-            <Aux>
+            <div className={classes.Authenticate}>
                 <h2>Log in</h2>
+                {state.authenticated.errorResponse
+                    ? <div className={classes.ResponseError}>
+                        <span>{state.authenticated.errorResponse}</span>
+                        <span className={classes.closeButton} onClick={removeError}>X</span>
+                    </div>
+                    : null}
                 <Authenticate onAuth={updateStateWithNewInformation} />
-            </Aux>
+            </div>
         )
     }
 
     return (
         <div className={rootClasses}>
-            {template}
+            <div className={classes.Authenticate}>
+                {template}
+            </div>
         </div>
     )
 };
 
 export default AuthContainer;
+
+
+
+    //TODO
+    //1. SETUP WATCHER TO WARN ABOUT IMPENDING LOG OUT
+    //2. PASS LOGIN STUFF FROM HERE TO AUTH TO MAKE SURE IT CAN UPDATE THE COMPONENT
+    //3. MAYBE SEPERATE INTO SEPERATE MODULES? TOO MUCH IS HAPPENING HERE
+    //3B. Make one authentication module that enables admin link, and redirect to it aswell (just like in burgerbuilder)

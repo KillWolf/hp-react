@@ -1,8 +1,7 @@
 export const extractData = (object) => {
     let dataObject = {};
     Object.keys(object).forEach(key => {
-        console.log('extract', object[key].value);
-        if (key !== 'formIsValid') dataObject[key] = object[key].value;
+        dataObject[key] = object[key].value;
     })
     return dataObject;
 }
@@ -22,7 +21,6 @@ export const checkValidity = (value, rules) => {
     return isValid;
 }
 
-
 export const onValueChangeHandler = (event, config, configKey, key, setMethod) => {
     const updatedConfig = { ...config };
     const updatedConfigElement = { ...config[configKey][key] }
@@ -41,4 +39,19 @@ export const onValueChangeHandler = (event, config, configKey, key, setMethod) =
 
 export const linkBuilder = (title) => {
     return title.toLowerCase().replace(/\s/g, "-");
-} 
+}
+
+export const showResponseMessage = (message, initialState, error, callback, time) => {
+    if (!error) {
+        callback({...initialState, responseMessage: message, error: error });
+        setTimeout(() => {
+            callback({...initialState, responseMessage: '', error: error });
+        }, time)
+    } else {
+        callback(prevState => ({...prevState, responseMessage: message, error: error }));
+        setTimeout(() => {
+            callback(prevState => ({...prevState, responseMessage: '', error: error }));
+        }, time)
+    }
+
+}

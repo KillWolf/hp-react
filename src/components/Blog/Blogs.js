@@ -42,7 +42,8 @@ const Blogs = () => {
     } else if (!config.loading) {
         content = (
             <Aux>
-                {config.blogs.map(blog => (
+                {config.blogs.map(blog => {
+                    return (
                     <NavLink key={blog.id} style={{ border: 'none' }} to={{ pathname: '/blog', search: blog.publicLink, state: { blog: blog } }}>
                         <div className={classes.Card}>
                             <div className={classes.CardLogo}>
@@ -56,7 +57,7 @@ const Blogs = () => {
                             </div>
                         </div>
                     </NavLink>
-                ))
+                )})
                 }
             </Aux>)
     }

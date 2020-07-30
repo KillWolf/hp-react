@@ -5,6 +5,7 @@ import classes from './Blog.module.css';
 import globalClasses from '../../../utility/Global/Common.module.css';
 import HeroImage from '../../../utility/HeroImage/HeroImage'
 import Spinner from '../../UI/Spinner/Spinner';
+import { findByLabelText } from '@testing-library/react';
 
 const Blog = (props) => {
     //TODO
@@ -34,15 +35,15 @@ const Blog = (props) => {
                             return window.location.href.substring(indexOfQuestionMark) === blog.publicLink;
                         })
                     blog = blog ? blog : {};
-                    setConfig({ loading: false, blog: blog, error: blog.id ? false : true})
+                    setConfig({ loading: false, blog: blog, error: blog.id ? false : true })
                 })
                 .catch(error => {
-                    setConfig({loading: false, blog: {}, error: true})
+                    setConfig({ loading: false, blog: {}, error: true })
                 })
         }
     }, [])
 
-    if(config.error) {
+    if (config.error) {
         rootClasses.push(classes.Error);
     }
 
@@ -51,14 +52,19 @@ const Blog = (props) => {
         content = (
             <div>
                 <div className={classes.DescriptiveText}>
-                    <div><strong>{config.blog.author}</strong></div>
-                    <div><i>{config.blog.date.getDate() + "-" + (config.blog.date.getMonth() + 1) + "-" + config.blog.date.getFullYear()}</i></div>
+                    <div>
+                        <NavLink to="/blogs" className={[classes.NavigationLink, globalClasses.Link].join(' ')}> Tilbage til blogs</NavLink>
+                    </div>
+                    <div style={{display: 'flex'}}>
+                        <div><strong>{config.blog.author}</strong></div>
+                        <div><i>{config.blog.date.getDate() + "-" + (config.blog.date.getMonth() + 1) + "-" + config.blog.date.getFullYear()}</i></div>
+                    </div>
                 </div>
                 <div className={classes.SeparatingLine}></div>
                 <div dangerouslySetInnerHTML={{ __html: config.blog.content }}></div>
             </div>
         )
-    } else if(config.loading) {
+    } else if (config.loading) {
         content = <Spinner />;
     } else {
         content = <div>Bloggen er ikke fundet, gå tilbage til <NavLink to='/blogs' className={globalClasses.Link}>oversigten.</NavLink></div>

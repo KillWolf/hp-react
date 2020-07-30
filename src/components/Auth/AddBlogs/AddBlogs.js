@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import axios from '../../../axios-instances/axios-firebase'
-import { extractData, checkValidity, linkBuilder } from '../../../utility/Helpers/Helpers';
+import { extractData, checkValidity, linkBuilder, showResponseMessage, onValueChangeHandler } from '../../../utility/Helpers/Helpers';
 import { getToken } from '../../../utility/Auth/Token';
 import Input from '../../UI/Input/Input';
 import classes from './AddBlogs.module.css';
@@ -8,70 +8,54 @@ import { Editor } from '@tinymce/tinymce-react';
 
 const AddBlogs = () => {
 
-    const initialState = {
-        title: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'TITEL'
-            },
-            value: '',
-            validation: {
-                required: true,
-            },
-            valid: false,
-            touched: false
-        },
-        excerpt: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'EXCERPT'
-            },
-            value: '',
-            validation: {
-                required: true,
-            },
-            valid: false,
-            touched: false
-        },
-        content: null,
-        formIsValid: false,
-        error: false
-    }
 
+    const initialState = {
+        addBlogs: {
+            title: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'TITEL'
+                },
+                value: '',
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false
+            },
+            excerpt: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'EXCERPT'
+                },
+                value: '',
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false
+            }
+        },
+        error: false,
+        responseMessage: '',
+        loading: false,
+        formIsValid: false,
+    }
+    let rteContent = '';
+    
     const [config, setConfig] = useState(initialState);
 
-    const onValueChangeHandler = (event, key) => {
-        const updatedConfig = { ...config };
-        const updatedConfigElement = { ...config[key] }
-        updatedConfigElement.value = event.target.value;
-        updatedConfigElement.valid = checkValidity(updatedConfigElement.value, updatedConfigElement.validation);
-        updatedConfigElement.touched = true;
-        updatedConfig[key] = updatedConfigElement;
-
-        let formIsValid = true;
-        for (let key in updatedConfig) {
-            if (key !== 'formIsValid' && key !== 'error' && key !== 'content') {
-                console.log(updatedConfig[key].valid)
-                updatedConfig.formIsValid = updatedConfig[key].valid && formIsValid;
-            }
-        }
-
-
-        setConfig(updatedConfig)
-    }
-
     const formsElementArray = [];
-    for (let key in config) {
-        if (key !== 'formIsValid' && key !== 'content' && key !== 'error' && key !== 'content') {
+    for (let key in config.addBlogs) {
+        if (key !== 'formIsValid') {
             formsElementArray.push({
                 id: key,
-                ...config[key]
+                ...config.addBlogs[key]
             });
         }
     }
-
 
     const formInput = formsElementArray.map(formElement => {
         return (
@@ -80,7 +64,7 @@ const AddBlogs = () => {
                 <Input
                     elementType={formElement.elementType}
                     elementConfig={formElement.elementConfig}
-                    changed={(event) => onValueChangeHandler(event, formElement.id)}
+                    changed={(event) => onValueChangeHandler(event, config, 'addBlogs', formElement.id, setConfig)}
                     value={formElement.value}
                     valid={formElement.valid}
                     shouldValidate={formElement.validation}
@@ -93,47 +77,51 @@ const AddBlogs = () => {
 
     const blogHandler = (event) => {
         event.preventDefault();
-        config.date = { value: new Date() };
-        config.author = { value: 'Hanne Pilegaard' }
-        config.content = { value: config.content };
-        config.publicLink = { value: linkBuilder(config.title.value) };
-        axios.post('/blogs.json?auth=' + getToken(), extractData(config))
+        setConfig(prevState => ({...prevState, loading: true}))
+        const dataObject = extractData(config.addBlogs);
+        dataObject.date = new Date();
+        dataObject.author = 'Hanne Pilegaard';
+        dataObject.content = rteContent;
+        dataObject.publicLink = linkBuilder(config.addBlogs.title.value);
+        axios.post('/blogs.json?auth=' + getToken(), dataObject)
             .then(() => {
-                
-                setConfig(initialState)
+                showResponseMessage(`${config.addBlogs.title.value} var gemt.`, initialState, false, setConfig, 5000);
             })
-            .catch(error => {
-                console.log(error);
+            .catch(() => {
+                showResponseMessage(`${config.addBlogs.title.value} var ikke gemt. Prøv igen, eller kontakt sønnikke`, {}, true, setConfig, 10000);
             });
     }
 
     //EDITOR 
-
     const handleEditorChange = (content, editor) => {
-        config.content = content;
+        rteContent = content;
     }
 
-    const editor = (
-    <Editor
-        initialValue="<p>This is the initial content of the editor</p>"
-        init={{
-            height: 500,
-            menubar: false,
-            plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
-            ],
-            toolbar:
-                'undo redo | formatselect | bold italic backcolor | \
+    let editor = (
+        <Editor
+            initialValue='Skriv løs!'
+            init={{
+                height: 250,
+                menubar: false,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar:
+                    'undo redo | formatselect | bold italic backcolor | \
              alignleft aligncenter alignright alignjustify | \
              bullist numlist outdent indent | removeformat | help'
-        }}
-        onEditorChange={handleEditorChange}
-    />)
+            }}
+            onEditorChange={handleEditorChange}
+        />)
 
+        console.log(config);
     return (
         <form className={classes.Form} onSubmit={blogHandler}>
+            {config.responseMessage
+                ? <div className={config.error ? classes.ResponseError : classes.ResponseSuccess}>{config.responseMessage}</div>
+                : null}
             {formInput}
             {editor}
             <button

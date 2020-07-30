@@ -1,6 +1,7 @@
 
 .DescriptiveText {
     display: flex;
+    justify-content: space-between;
 }
 
 .DescriptiveText div:first-child {
@@ -14,4 +15,9 @@
 
 .Error {
     margin-top: 200px;
+}
+
+.NavigationLink {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import classes from './AddRecommendations.module.css';
-import { extractData, onValueChangeHandler } from '../../../utility/Helpers/Helpers';
+import { extractData, onValueChangeHandler, showResponseMessage } from '../../../utility/Helpers/Helpers';
 import { getToken } from '../../../utility/Auth/Token';
 import axios from '../../../axios-instances/axios-firebase';
 import Input from '../../UI/Input/Input';
@@ -49,7 +49,11 @@ const AddRecommendation = () => {
                 touched: false
             },
         },
-        formIsValid: false
+        responseMessage: '',
+        error: false,
+        loading: false,
+        formIsValid: false,
+
     }
 
     const [config, setConfig] = useState(initialState)
@@ -57,12 +61,11 @@ const AddRecommendation = () => {
 
     const formsElementArray = [];
     for (let key in config.addRecommendation) {
-        if (key !== 'formIsValid') {
-            formsElementArray.push({
-                id: key,
-                ...config.addRecommendation[key]
-            });
-        }
+        formsElementArray.push({
+            id: key,
+            ...config.addRecommendation[key]
+        });
+
     }
 
     const formInput = formsElementArray.map(formElement => {
@@ -85,29 +88,18 @@ const AddRecommendation = () => {
     const recommendationHandler = (event) => {
         event.preventDefault();
         axios.post('/recommendations.json?auth=' + getToken(), extractData(config.addRecommendation))
-            .then(response => {
-                setResponseMessage({ message: `${config.addRecommendation.title.value} var gemt.`, success: true, enable: true })
-                setTimeout(() => {
-                    setResponseMessage({ message: '', success: true, enable: false })
-                }, 5000)
-                setConfig(initialState)
+            .then(() => {
+                showResponseMessage(`${config.addRecommendation.title.value} var gemt.`, initialState, false, setConfig, 5000);
             })
-            .catch(error => {
-                setResponseMessage({
-                    message: `${config.addRecommendation.title.value} var ikke gemt. Prøv igen, eller kontakt sønnikke`,
-                    success: false,
-                    enable: true
-                });
-                setTimeout(() => {
-                    setResponseMessage({ message: '', success: true, enable: false })
-                }, 10000);
+            .catch(() => {
+                showResponseMessage(`${config.addRecommendation.title.value} var ikke gemt. Prøv igen, eller kontakt sønnikke`, {}, true, setConfig, 10000);
             });
     }
 
     return (
         <form className={classes.Form} onSubmit={recommendationHandler}>
-            {responseMessage.enable
-                ? <div className={responseMessage.success ? classes.ResponseSuccess : classes.ResponseError}>{responseMessage.message}</div>
+            {config.responseMessage
+                ? <div className={config.error ? classes.ResponseError : classes.ResponseSuccess}>{config.responseMessage}</div>
                 : null}
             {formInput}
             <button

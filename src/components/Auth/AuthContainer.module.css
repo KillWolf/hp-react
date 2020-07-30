@@ -7,6 +7,11 @@
     width: 70%;
 }
 
+.Authenticate {
+    width: 90%;
+    margin: 0 auto;
+}
+
 .Header {
     font-weight: 200;
     align-self: flex-start;
@@ -48,5 +53,19 @@
 
 .Unselected:hover {
     background-color: #E0E0E0;
+}
+
+.ResponseError {
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    width: 100%;
+    background-color: #FF6E40;
+    border: 1px solid #DD2C00;
+}
+
+.closeButton:hover {
+    cursor: pointer;
 }
 
