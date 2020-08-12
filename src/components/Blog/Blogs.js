@@ -11,11 +11,16 @@ import { ErrorMessage } from '../../utility/Global/Error/ServiceHandling/Error/E
 const Blogs = () => {
 
     const rootClasses = [globalClasses.Panel].join(' ');
+    const cardClasses = [classes.Card];
+
     const [config, setConfig] = useState({ loading: true, blogs: [], error: false });
 
     useEffect(() => {
+        setConfig({ loading: true, blogs: [], error: false });
         getBlogs(setConfig)
-    }, [])
+            .then(response => setConfig(prevState => ({ ...prevState, loading: false, blogs: response })))
+            .catch(() => setConfig(prevState => ({ ...prevState, loading: false, blogs: [], error: true })));
+    }, []);
 
     let content = <Spinner />;
 
@@ -27,14 +32,15 @@ const Blogs = () => {
                 {config.blogs.map(blog => {
                     return (
                         <NavLink key={blog.id} style={{ border: 'none' }} to={{ pathname: '/blog', search: blog.publicLink, state: { blog: blog } }}>
-                            <div className={classes.Card}>
-                                <div className={classes.CardLogo}>
-                                    <img src={logo} width="100" alt="Logo" />
+                            <div className={cardClasses.join(' ')}>
+                                <div className={classes.CardTop}>
+                                    {blog.imageLink 
+                                    ? <div style={{backgroundImage: `url(${blog.imageLink}`}} className={classes.CardImage}></div> 
+                                    : <div className={classes.CardLogo}><img src={logo} width="100" alt="Logo" /></div>}
                                 </div>
-                                <h4>{blog.title}</h4>
-                                <p>{blog.excerpt}</p>
-                                <div className={classes.DescriptiveInfo}>
-                                    <div><strong>{blog.author}</strong></div>
+                                <div className={classes.CardBottom}>
+                                    <h3>{blog.title}</h3>
+                                    <div className={classes.Author}>{blog.author}</div>
                                     <div><i>{blog.date.getDate() + "-" + (blog.date.getMonth() + 1) + "-" + blog.date.getFullYear()}</i></div>
                                 </div>
                             </div>

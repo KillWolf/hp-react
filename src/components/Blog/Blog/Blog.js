@@ -14,7 +14,7 @@ const Blog = (props) => {
 
     let blog = null;
     let content = null;
-    const indexOfQuestionMark = window.location.href.indexOf('?') + 1;
+    const queryString = decodeURIComponent(window.location.href.substring(window.location.href.indexOf('?') + 1));
     let rootClasses = [globalClasses.Panel];
 
 
@@ -23,22 +23,19 @@ const Blog = (props) => {
         if (props.location.state && props.location.state.blog) {
             setConfig({ loading: false, blog: props.location.state.blog, error: false })
         } else {
-            axios.get('/blogs.json')
+            getBlogs()
                 .then(response => {
-                    const entries = Object.entries(response.data);
-                    blog = entries
-                        .map(entry => {
-                            return { id: entry[0], ...entry[1], date: new Date(entry[1].date) }
-                        })
+                    console.log('queryString', queryString)
+                    blog = response
                         .find(blog => {
-                            return window.location.href.substring(indexOfQuestionMark) === blog.publicLink;
+                            return queryString === blog.publicLink;
                         })
+                    console.log('BLOG', blog);
                     blog = blog ? blog : {};
-                    setConfig({ loading: false, blog: blog, error: blog.id ? false : true })
+                    setConfig({ loading: false, blog: blog, error: blog.id ? false : true });
                 })
-                .catch(error => {
-                    setConfig({ loading: false, blog: {}, error: true })
-                })
+                .catch(error => setConfig({ loading: false, blog: {}, error: true }));
+
         }
     }, [])
 
@@ -54,7 +51,7 @@ const Blog = (props) => {
                     <div>
                         <NavLink to="/blogs" className={[classes.NavigationLink, globalClasses.Link].join(' ')}> Tilbage til blogs</NavLink>
                     </div>
-                    <div style={{display: 'flex'}}>
+                    <div style={{ display: 'flex' }}>
                         <div><strong>{config.blog.author}</strong></div>
                         <div><i>{config.blog.date.getDate() + "-" + (config.blog.date.getMonth() + 1) + "-" + config.blog.date.getFullYear()}</i></div>
                     </div>
