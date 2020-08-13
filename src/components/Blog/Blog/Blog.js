@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from '../../../axios-instances/axios-firebase'
 import { getBlogs } from '../../../utility/Global/Blogs/BlogStore'
 import { NavLink } from 'react-router-dom';
 import classes from './Blog.module.css';
@@ -16,7 +15,6 @@ const Blog = (props) => {
     let content = null;
     const queryString = decodeURIComponent(window.location.href.substring(window.location.href.indexOf('?') + 1));
     let rootClasses = [globalClasses.Panel];
-
 
     const [config, setConfig] = useState({ loading: true, blog: {}, error: false });
     useEffect(() => {

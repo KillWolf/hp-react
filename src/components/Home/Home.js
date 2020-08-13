@@ -6,11 +6,12 @@ import classes from './Home.module.css';
 
 const home = (props) => {
     const contentArray = [
-        { title: '[ Advocacy ]', imageName: 'Advocacy' },
-        { title: '[ Blog ]', imageName: 'Canyon' },
-        { title: '[ Credentials ]', imageName: 'Mountain' }
+        { title: '[ Advocacy ]', imageName: 'Advocacy', id: "advocacy" },
+        { title: '[ Blog ]', id: "blog" },
+        { title: '[ Credentials ]', imageName: 'Mountain', id: "credentials" }
     ];
-    const cards = contentArray.map(content => <Card title={content.title} key={content.imageName} imageName={content.imageName} />)
+    const cards = contentArray.map(content =>
+        <Card title={content.title} id={content.id} key={content.id} imageName={content.imageName} />)
 
     return (
         <Aux>
