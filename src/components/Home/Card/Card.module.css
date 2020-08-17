@@ -5,6 +5,22 @@
 	margin: 2rem 3rem;
 }
 
+.SingleCard:hover {
+	background-color: #F5F5F5;
+	cursor: pointer;
+}
+
+.CardImage {
+	height: 50%;
+    background-size: auto 500px;
+    background-position: center;
+}
+
+.CardContainer {
+	width: 290px;
+	height: 310px;
+}
+
 .SingleCard h3 {
 	font-size: 1.5rem;
 	font-weight: 100;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { getBlogs } from '../../../utility/Global/Blogs/BlogStore'
-import BlogCard from '../../Blog/BlogCard/BlogCard'
 import Spinner from '../../UI/Spinner/Spinner';
 import Aux from '../../../hoc/Aux';
 import classes from './Card.module.css';
@@ -25,21 +25,30 @@ const Card = (props) => {
 
     if (props.imageName) {
         img = images(`./${props.imageName}-thumb.jpeg`);
-        style = { width: '300px', height: '210px', background: `url("${img}")` }
+        style = { backgroundImage: `url("${img}")` }
     }
 
     let content = null;
-
     if (props.id === 'blog') {
-        content = state.loading 
-        ? <div className={classes.SpinnerContainer}><Spinner class="SpinnerWhite" /> </div>
-        : <BlogCard blog={state.blog} />
+        content = (
+            <div className={classes.SingleCard}>
+                <h3>{props.title}</h3>
+                {state.loading
+                    ? <div className={[classes.SpinnerContainer, classes.CardContainer].join(' ')}><Spinner class="SpinnerWhite" /> </div>
+                    : <NavLink to={props.path + '?' + state.blog.publicLink}><div className={classes.CardContainer}>
+                        <div style={{ backgroundImage: `url(${state.blog.imageLink}` }} className={classes.CardImage}></div>
+                        <h5>NYESTE BLOG</h5>
+                        <h3>{state.blog.title}</h3>
+                    </div></NavLink>}
+            </div>
+        )
     } else {
         content = (
             <div className={classes.SingleCard}>
                 <h3>{props.title}</h3>
-                <div style={style}></div>
-                <div>lol</div>
+                <div className={classes.CardContainer}>
+                    <div style={style} className={classes.CardImage}></div>
+                </div>
             </div>
         )
     }
