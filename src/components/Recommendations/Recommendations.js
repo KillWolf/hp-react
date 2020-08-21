@@ -32,7 +32,7 @@ const Recommendations = () => {
     let content = <div className={rootClasses}><Spinner /></div>;
 
     if (recommendations.error) {
-        content = <div className={rootClasses}>{ErrorMessage('Der opstod en fejl.', {message: 'Prøv igen', method: getRecommendations })}</div>
+        content = <div className={rootClasses}>{ErrorMessage('Der opstod en fejl med at hente anbefalinger.', {message: 'Prøv igen', method: getRecommendations })}</div>
     } else if (!recommendations.loading) {
         content = (
             <Aux>

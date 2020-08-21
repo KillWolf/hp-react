@@ -8,7 +8,7 @@ const home = (props) => {
     const contentArray = [
         { title: '[ Advocacy ]', imageName: 'Advocacy', id: "advocacy", path: '/advocacy'},
         { title: '[ Blog ]', id: "blog", path: '/blog'},
-        { title: '[ Credentials ]', imageName: 'Mountain', id: "credentials", path: '/credentials' }
+        { title: '[ Anbefalinger ]', imageName: 'Mountain', id: "credentials", path: '/recommendations' }
     ];
     const cards = contentArray.map(content =>
         <Card title={content.title} id={content.id} path={content.path} key={content.id} imageName={content.imageName} />)

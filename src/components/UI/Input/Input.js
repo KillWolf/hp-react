@@ -26,7 +26,7 @@ const input = (props) => {
                     onChange={props.changed} 
                     cols="50"
                     rows="15"
-                    placeholder="Skriv citat"/>
+                    placeholder="Skriv her"/>
             );
             break;
         case ('select'):

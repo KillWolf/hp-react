@@ -57,7 +57,6 @@ const AddRecommendation = () => {
     }
 
     const [config, setConfig] = useState(initialState)
-    const [responseMessage, setResponseMessage] = useState({ message: '', success: true, enable: false })
 
     const formsElementArray = [];
     for (let key in config.addRecommendation) {

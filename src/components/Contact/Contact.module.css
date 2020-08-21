@@ -1,0 +1,74 @@
+Form {
+    align-items: center;
+    padding: 3rem;
+}
+
+.InputContainer:first-child {
+    margin-top: 2rem;
+}
+
+.Button {
+    margin: 2rem 0;
+    align-self: flex-end;
+    border-radius: 4px;
+    background-color: transparent;
+    border: 2px solid #4CAF50;
+    color: #4CAF50;
+    padding: 0.5rem 1rem;
+}
+
+.Button:hover:enabled {
+    background-color: #C8E6C9;
+    cursor: pointer;
+}
+
+.Button:disabled {
+    border: none;
+    background-color: #E0E0E0;
+    color: #BDBDBD;
+}
+
+
+.InputContainer {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    margin: 1rem 0;
+
+}
+
+
+.FormLabels {
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    align-self: flex-start;
+}
+
+.ResponseSuccess {
+    padding: 0.5rem;
+    color: white;
+    background-color: #69F0AE;
+    border: 1px solid #00E676;
+
+}
+
+.ResponseError {
+    padding: 0.5rem;
+    color: white;
+    background-color: #FF6E40;
+    border: 1px solid #DD2C00;
+}
+
+.formInfo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.formInfo > * {
+    margin-top: 0 !important;
+    width: 45%;
+}
+
+.formInfo > *:first-child {
+    padding-right: 1rem;
+}

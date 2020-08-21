@@ -14,10 +14,7 @@ const Blogs = () => {
     const [config, setConfig] = useState({ loading: true, blogs: [], error: false });
 
     useEffect(() => {
-        setConfig({ loading: true, blogs: [], error: false });
-        getBlogs(setConfig)
-            .then(response => setConfig(prevState => ({ ...prevState, loading: false, blogs: response })))
-            .catch(() => setConfig(prevState => ({ ...prevState, loading: false, blogs: [], error: true })));
+        getBlogs(setConfig);
     }, []);
 
     let content = <Spinner />;
@@ -25,6 +22,7 @@ const Blogs = () => {
     if (!config.loading && config.error) {
         content = ErrorMessage('Der opstod en fejl.', { message: 'Prøv igen', method: () => getBlogs(setConfig) });
     } else if (!config.loading) {
+        console.log(config.loading, config.error, config.response)
         content = (
             <Aux>
                 {config.blogs.map(blog => {
