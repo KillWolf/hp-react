@@ -84,7 +84,7 @@ const Contact = () => {
     const formInput = formsElementArray.map(formElement => {
         return (
             <div key={formElement.id} className={classes.InputContainer}>
-                <label className={classes.FormLabels} for={formElement.id}>{formElement.elementConfig.label}</label>
+                <label className={classes.FormLabels} htmlFor={formElement.id}>{formElement.elementConfig.label}</label>
                 <Input
                     elementType={formElement.elementType}
                     elementConfig={formElement.elementConfig}

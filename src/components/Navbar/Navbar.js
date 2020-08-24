@@ -9,11 +9,9 @@ const Navbar = (props) => {
         window.addEventListener('scroll', handleScroll);
         logoElement = document.getElementById("Logo");
     });
-
     function handleScroll() {
         if (window.pageYOffset > 80) {
             logoElement.classList.add(classes.LogoSmall);
-
         } else {
             logoElement.classList.remove(classes.LogoSmall);
         }
