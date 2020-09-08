@@ -8,8 +8,6 @@ import Aux from '../../hoc/Aux';
 
 
 const Contact = () => {
-    const rootClasses = [globalClasses.Panel, classes.Contact].join(' ');
-
     const recommendationHandler = (event) => {
         event.preventDefault();
         axios.post('/contact.json', extractData(config.addMessage))
@@ -73,6 +71,8 @@ const Contact = () => {
 
     const [config, setConfig] = useState(initialState)
 
+    //console.log(config);
+
     const formsElementArray = [];
     for (let key in config.addMessage) {
         formsElementArray.push({
@@ -103,13 +103,10 @@ const Contact = () => {
     return (
         <Aux>
             <h1 className={globalClasses.Header}>CONTACT</h1>
-            <div className={globalClasses.Panel}>
+            <div id="panel" className={globalClasses.Panel}>
                 <form className={classes.Form} onSubmit={recommendationHandler}>
                     {config.responseMessage
-                        ? <div className={config.error ? classes.ResponseError : classes.ResponseSuccess}>{config.responseMessage}</div>
-                        : null}
-                    {config.responseMessage
-                        ? <div className={config.error ? classes.ResponseError : classes.ResponseSuccess}>{config.responseMessage}</div>
+                        ? <div id="responseMessage" className={config.error ? classes.ResponseError : classes.ResponseSuccess}>{config.responseMessage}</div>
                         : null}
                     <div className={classes.formInfo}>
                         {formInfo}
