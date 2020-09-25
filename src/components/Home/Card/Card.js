@@ -21,7 +21,7 @@ const Card = (props) => {
         getBlog(setState, true);
     }, [])
 
-
+    
     if (props.imageName) {
         img = images(`./${props.imageName}-thumb.jpeg`);
         style = { backgroundImage: `url("${img}")` }

@@ -4,7 +4,7 @@
 
 .ComponentContainer {
     margin: 0 auto;
-    width: 70%;
+    width: 100%;
 }
 
 .Authenticate {
@@ -26,7 +26,7 @@
 }
 
 
-.MenuList div:first-child {
+.MenuList div {
     margin-right: 0.2rem;
     left: -1px;
 }

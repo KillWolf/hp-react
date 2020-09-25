@@ -48,6 +48,7 @@
     color: white;
     background-color: #69F0AE;
     border: 1px solid #00E676;
+    margin: 1rem;
 
 }
 
@@ -56,4 +57,5 @@
     color: white;
     background-color: #FF6E40;
     border: 1px solid #DD2C00;
+    margin: 1rem;
 }

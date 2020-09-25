@@ -2,8 +2,9 @@ import React, { useState, useEffect} from 'react';
 import classes from './AuthContainer.module.css';
 import globalClasses from '../../utility/Global/Common.module.css';
 import AddRecommendation from './AddRecommendations/AddRecommendations';
-import { checkAuthentication, resetAuthentication } from '../../utility/Auth/Token'
 import AddBlog from './AddBlogs/AddBlogs';
+import Messages from './Messages/Messages';
+import { checkAuthentication, resetAuthentication } from '../../utility/Auth/Token'
 import Authenticate from './Authenticate/Authenticate';
 import Spinner from '../UI/Spinner/Spinner';
 import Aux from '../../hoc/Aux';
@@ -30,7 +31,8 @@ const AuthContainer = () => {
 
     const componentsArray = [
         { component: <AddRecommendation />, header: 'TILFØJ ANBEFALING', id: 'recommendation' },
-        { component: <AddBlog />, header: 'BLOG', id: 'blog' }
+        { component: <AddBlog />, header: 'BLOG', id: 'blog' },
+        { component: <Messages />, header: 'BESKEDER', id: 'messages' }
     ];
 
     const selectedComponent = componentsArray.find(component => component.id === selected);

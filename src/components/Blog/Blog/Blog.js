@@ -23,12 +23,10 @@ const Blog = (props) => {
         } else {
             getBlogs()
                 .then(response => {
-                    console.log('queryString', queryString)
                     blog = response
                         .find(blog => {
                             return queryString === blog.publicLink;
                         })
-                    console.log('BLOG', blog);
                     blog = blog ? blog : {};
                     setConfig({ loading: false, blog: blog, error: blog.id ? false : true });
                 })

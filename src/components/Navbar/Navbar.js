@@ -19,7 +19,7 @@ const Navbar = (props) => {
     return (
         <nav className={classes.Nav} id="Nav">
             <div className={classes.NavWrapper}>
-                <Link class={classes.LogoLink} to='/'><img className={classes.Logo} src={logo} id="Logo" alt="" /></Link>
+                <Link className={classes.LogoLink} to='/'><img className={classes.Logo} src={logo} id="Logo" alt="" /></Link>
                 <ul>
                     <li><NavLink activeClassName={classes.Active} exact to="/">Home</NavLink></li>
                     <li><NavLink activeClassName={classes.Active} to="/Advocacy">Advocacy</NavLink></li>

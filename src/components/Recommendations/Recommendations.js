@@ -25,6 +25,7 @@ const Recommendations = () => {
                 setRecommendations({ recommendations: [], loading: false, error: true })
             })
     }
+    
     useEffect(() => {
         getRecommendations();
     }, [])

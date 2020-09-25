@@ -10,13 +10,15 @@ import Aux from '../../hoc/Aux';
 const Contact = () => {
     const recommendationHandler = (event) => {
         event.preventDefault();
-        axios.post('/contact.json', extractData(config.addMessage))
-            .then(() => {
-                showResponseMessage(`Din besked er sendt.`, initialState, false, setConfig, 5000);
-            })
-            .catch(() => {
-                showResponseMessage(`Der opstod en fejl ved sendning. Prøv igen senere.`, {}, true, setConfig, 10000);
-            });
+        if (!config.rejectSubmission) {
+            axios.post('/contact.json', extractData(config.addMessage))
+                .then(() => {
+                    showResponseMessage(`Din besked er sendt.`, initialState, false, setConfig, 5000);
+                })
+                .catch(() => {
+                    showResponseMessage(`Der opstod en fejl ved sendning. Prøv igen senere.`, {}, true, setConfig, 10000);
+                });
+        }
     }
 
     const initialState = {
@@ -48,6 +50,19 @@ const Contact = () => {
                 valid: false,
                 touched: false
             },
+            subject: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'EMNE'
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            },
             message: {
                 elementType: 'textarea',
                 elementConfig: {
@@ -66,12 +81,10 @@ const Contact = () => {
         error: false,
         loading: false,
         formIsValid: false,
-
+        rejectSubmission: false
     }
 
     const [config, setConfig] = useState(initialState)
-
-    //console.log(config);
 
     const formsElementArray = [];
     for (let key in config.addMessage) {
@@ -79,6 +92,10 @@ const Contact = () => {
             id: key,
             ...config.addMessage[key]
         });
+    }
+
+    const getDemBots = () => {
+        setConfig((prevState) => ({ ...prevState, rejectSubmission: !prevState.rejectSubmission }))
     }
 
     const formInput = formsElementArray.map(formElement => {
@@ -104,7 +121,7 @@ const Contact = () => {
         <Aux>
             <h1 className={globalClasses.Header}>CONTACT</h1>
             <div id="panel" className={globalClasses.Panel}>
-                <form className={classes.Form} onSubmit={recommendationHandler}>
+                <form className={classes.ContactForm} onSubmit={recommendationHandler}>
                     {config.responseMessage
                         ? <div id="responseMessage" className={config.error ? classes.ResponseError : classes.ResponseSuccess}>{config.responseMessage}</div>
                         : null}
@@ -113,10 +130,14 @@ const Contact = () => {
                     </div>
                     {formInput}
                     <button
-                        className={classes.FormInputs, classes.Button}
+                        className={[classes.FormInputs, classes.Button].join(' ')}
                         disabled={!config.formIsValid} type="submit" value="">
                         INDSEND
-                </button>
+                    </button>
+                    <div style={{ position: 'absolute', left: '-999999px' }}>
+                        <input onClick={getDemBots} type="checkbox" id="ta" />
+                        <label htmlFor="ta"> Do you consent to the T/A?</label><br></br>
+                    </div>
                 </form>
             </div>
         </Aux>

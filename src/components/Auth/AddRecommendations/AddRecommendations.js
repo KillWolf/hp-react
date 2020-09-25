@@ -102,7 +102,7 @@ const AddRecommendation = () => {
                 : null}
             {formInput}
             <button
-                className={classes.FormInputs, classes.Button}
+                className={[classes.FormInputs, classes.Button].join(' ')}
                 disabled={!config.formIsValid} type="submit" value="">
                 INDSEND
             </button>

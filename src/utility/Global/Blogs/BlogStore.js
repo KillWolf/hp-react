@@ -6,6 +6,7 @@ export const getBlogs = (setConfig, returnOneBlog) => {
     let blogsToBeReturned;
 
     if (blogsArray.length > 0) {
+
         blogsToBeReturned = returnOneBlog ? blogsArray[0] : blogsArray;
         setConfig({ loading: false, error: false, blogs: blogsToBeReturned });
     } else {

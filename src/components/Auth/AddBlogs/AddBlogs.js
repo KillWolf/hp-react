@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from '../../../axios-instances/axios-firebase'
-import { extractData, checkValidity, linkBuilder, showResponseMessage, onValueChangeHandler } from '../../../utility/Helpers/Helpers';
+import { extractData, linkBuilder, showResponseMessage, onValueChangeHandler } from '../../../utility/Helpers/Helpers';
 import { getToken } from '../../../utility/Auth/Token';
 import Input from '../../UI/Input/Input';
 import classes from './AddBlogs.module.css';
@@ -60,7 +60,7 @@ const AddBlogs = () => {
     const formInput = formsElementArray.map(formElement => {
         return (
             <div key={formElement.id} className={classes.InputContainer}>
-                <label className={classes.FormLabels} for={formElement.id}>{formElement.elementConfig.label}</label>
+                <label className={classes.FormLabels} htmlFor={formElement.id}>{formElement.elementConfig.label}</label>
                 <Input
                     elementType={formElement.elementType}
                     elementConfig={formElement.elementConfig}
@@ -116,7 +116,6 @@ const AddBlogs = () => {
             onEditorChange={handleEditorChange}
         />)
 
-        console.log(config);
     return (
         <form className={classes.Form} onSubmit={blogHandler}>
             {config.responseMessage
@@ -125,7 +124,7 @@ const AddBlogs = () => {
             {formInput}
             {editor}
             <button
-                className={classes.FormInputs, classes.Button}
+                className={[classes.FormInputs, classes.Button].join(' ')}
                 disabled={!config.formIsValid} type="submit" value="">
                 INDSEND
             </button>

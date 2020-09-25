@@ -64,7 +64,7 @@ const Authenticate = (props) => {
     const formInput = formsElementArray.map(formElement => {
         return (
             <div key={formElement.id} className={classes.InputContainer}>
-                <label className={classes.FormLabels} for={formElement.id}>{formElement.elementConfig.label}</label>
+                <label className={classes.FormLabels} htmlFor={formElement.id}>{formElement.elementConfig.label}</label>
                 <Input
                     elementType={formElement.elementType}
                     elementConfig={formElement.elementConfig}
@@ -82,7 +82,7 @@ const Authenticate = (props) => {
         <form className={classes.Form} onSubmit={onSignInHandler}>
             {formInput}
             <button
-                className={classes.FormInputs, classes.Button}
+                className={[classes.FormInputs, classes.Button].join(' ')}
                 disabled={!config.formIsValid} type="submit" value="">
                 LOGIN
             </button>
